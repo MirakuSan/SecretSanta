@@ -1,7 +1,5 @@
-from random import choice
+﻿from random import choice
 import os
-
-
 
 donne =    ["prenom1","prenom2","prenom3","prenom4","prenom5","prenom6"]
 
@@ -14,30 +12,24 @@ def picksomeone(recois) :
         recois_name = choice(recois)
         liste[i][0] = donne_name
         liste[i][1] = recois_name
-        recois.remove(recois_name)      
+        recois.remove(recois_name)
     for i in range(0, len(liste)) :
         if liste[i][0] == liste[i][1] :
             print("Found same ... Reroll !")
             recois = donne[:]
             picksomeone(recois)
 
-
-
-
-
-
 picksomeone(recois)
 
-""" -> Pour te faire spoil ... et vérifier que cela fontionne correctement ! 
+""" -> Pour te faire spoil ... et vérifier que cela fontionne correctement !
 for i in  range(0, len(liste)):
     print (liste[i][0] + " --> " + liste[i][1])
 """
 
-
 if not os.path.exists('people/'):
     os.makedirs('people/')
 
-with open('people/message.txt','w',encoding='utf-8-sig') as m:
+with open('people/_message.txt','w',encoding='utf-8-sig') as m:
     for i in  range(0, len(liste)):
         with open(('people/' + liste[i][0] + '.txt'),'w',encoding='utf-8-sig') as f :
                 f.write(liste[i][0] + " --> " + liste[i][1])
@@ -45,4 +37,4 @@ with open('people/message.txt','w',encoding='utf-8-sig') as m:
         f.close()
 m.close()
 
-print("Done :)\n check out the files ") 
+print("Done :)\n-> check out the files in the people folder !")
