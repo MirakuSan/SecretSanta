@@ -1,10 +1,77 @@
 ﻿from random import choice
 import os
+from os.path import basename
+import smtplib
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE, formatdate
+import yaml
+import hashlib
 
-donne =    ["prenom1","prenom2","prenom3","prenom4","prenom5","prenom6"]
+# import .yaml file for credentials (create it yourself!)
+credentials = yaml.safe_load(open('./credentials.yml'))
+
+smtp_server =  credentials['mail']['server']
+sender_email = credentials['mail']['email']
+password = credentials['mail']['password']
+port = 587
+
+
+
+donne=["me","you","him","her"] #list of people
+
+Emailaddresses = { # Dict with name and email address
+    "me": "Me@gmail.com",
+    "you": "you@gmail.com",
+    "him": "him@gmail.com",
+    "her": "herr@gmail.com"
+}
+
+subject = "🎅 Le noël Secret"
+text ="""\
+Salut XXX 
+Comment ça va toi ? 😏
+
+Jespère que t'es pret pour le noel secret !
+
+Oublie pas :
+- Maximum 15€ !😱
+- Essaye de te rapprocher de 15€ au max sinon c'est relou pour tout le monde.
+- Il faut pas dire aux autres a qui tu offre un cadeau. ⛔
+- Essaye de faire un cadeau cool quand même ... c'est noel 🎅
+
+Regarde la pièce jointe pour savoir à qui tu fais un cadeau et bon courrage 🎁👋
+
+Bisous
+Toto 💖 """
 
 recois = donne[:]
 liste = [ [ None for y in range( 2 ) ] for x in range(0,len(donne) ) ]
+
+
+def send_mail(email,file,mail_text):
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = email
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(mail_text))
+
+    part = MIMEApplication(open(file, 'rb').read())
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(file)
+    msg.attach(part)
+
+    smtp = smtplib.SMTP(smtp_server,port)
+    smtp.starttls()
+    smtp.login(sender_email,password)
+	
+    smtp.sendmail(sender_email, email, msg.as_string())
+    print("mail sended to "+email)
+
+    smtp.quit()
 
 def picksomeone(recois) :
     for i in range(0, len(donne)):
@@ -20,21 +87,18 @@ def picksomeone(recois) :
             picksomeone(recois)
 
 picksomeone(recois)
+print("Hand verify with sha256 sums")
 
-""" -> Pour te faire spoil ... et vérifier que cela fontionne correctement !
 for i in  range(0, len(liste)):
-    print (liste[i][0] + " --> " + liste[i][1])
-"""
+    print (hashlib.sha256(liste[i][0].encode('utf-8')).hexdigest() + " offre à " + hashlib.sha256(liste[i][1].encode('utf-8')).hexdigest())
 
 if not os.path.exists('people/'):
     os.makedirs('people/')
 
-with open('people/_message.txt','w',encoding='utf-8-sig') as m:
-    for i in  range(0, len(liste)):
-        with open(('people/' + liste[i][0] + '.txt'),'w',encoding='utf-8-sig') as f :
-                f.write(liste[i][0] + " --> " + liste[i][1])
-                m.write("Salut "+liste[i][0]+" Comment ça va ? 😏\nLets go pour le papa noel random ! 🎅\nRegarde le fichier pour savoir à qui tu fais un cadeau ✨🎁\nOublie pas max 10€ !😱\nBisous💖\n\n")
-        f.close()
-m.close()
-
-print("Done :)\n-> check out the files in the people folder !")
+for i in range(0, len(liste)):
+    with open(('people/' + liste[i][0] + '.txt'),'w',encoding='utf-8-sig') as f :
+            f.write(liste[i][0] + " offre à " + liste[i][1])
+    f.close()
+    send_mail(Emailaddresses[liste[i][0]],os.path.abspath('people/' + liste[i][0] + '.txt'),text.replace("XXX",liste[i][0]))
+	
+print("Done !")
