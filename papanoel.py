@@ -1,4 +1,4 @@
-﻿from random import choice
+from random import choice
 import os
 from os.path import basename
 import smtplib
@@ -25,23 +25,16 @@ Emailaddresses = { # Dict with name and email address
     "me": "Me@gmail.com",
     "you": "you@gmail.com",
     "him": "him@gmail.com",
-    "her": "herr@gmail.com"
+    "her": "her@gmail.com"
 }
 
-subject = "🎅 Le noël Secret"
+subject = "🎅 Le Noël Secret"
 text ="""\
-Salut XXX 
-Comment ça va toi ? 😏
+Salut XXX !
 
-Jespère que t'es pret pour le noel secret !
+Regarde la pièce jointe pour savoir à qui tu fais un cadeau 🎁👋
 
-Oublie pas :
-- Maximum 15€ !😱
-- Essaye de te rapprocher de 15€ au max sinon c'est relou pour tout le monde.
-- Il faut pas dire aux autres a qui tu offre un cadeau. ⛔
-- Essaye de faire un cadeau cool quand même ... c'est noel 🎅
-
-Regarde la pièce jointe pour savoir à qui tu fais un cadeau et bon courrage 🎁👋
+Maximum 15€ cette année !😱
 
 Bisous
 Toto 💖 """
