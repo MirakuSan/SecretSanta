@@ -1,4 +1,4 @@
-<h1 align="center">👋 Welcome to Père Noël Secret 👋</h1>
+<h1 align="center">Secret Santa</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-2-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/Kractucs" target="_blank">
@@ -7,7 +7,7 @@
 </p>
 
 
-> Generate random papa noel :)
+> This script generate a random selection for a secret santa, it sends a mail to every participent automaticly !
 
 ## TODO:bulb:
 
@@ -32,5 +32,4 @@ python  ./papanoel.py
 
 👤 **Thomas**
 
-* Twitter: [@Kractucs](https://twitter.com/Kractucs)
 * Github: [@Kractucs](https://github.com/Kractucs)
