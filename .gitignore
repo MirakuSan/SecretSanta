@@ -106,3 +106,17 @@ venv.bak/
 
 people/
 credentials.yml
+papanoel.py.old
+# <AIDD-PRIVACY>
+#
+# You might want to ignore the following files and directories:
+#
+aidd* # AIDD installation folder
+aidd/
+docs/
+worktrees/
+
+.claude
+# docs removed (legacy)
+
+# </AIDD-PRIVACY>
