@@ -49,6 +49,8 @@ mail:
   password: "your-password"
 ```
 
+> **Gmail:** use an [app password](https://myaccount.google.com/apppasswords), not your account password. Google rejects regular passwords over SMTP; app passwords require 2-Step Verification to be enabled.
+
 ### 2. Run the interactive script
 
 ```bash
