@@ -1,0 +1,10 @@
+# Config Paradev du projet SecretSanta.
+# setup : venv + dépendances + copie de credentials.yml depuis le checkout principal.
+# Le terminal par défaut lance les tests ; main.py reste à lancer à la main (interactif, envoie de vrais mails).
+
+[setup]
+run = ["./.paradev/setup.sh"]
+
+[terminals.tests]
+run = ".venv/bin/python -m pytest"
+default = true

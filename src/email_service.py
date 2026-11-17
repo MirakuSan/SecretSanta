@@ -2,8 +2,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
-from typing import Dict
+from typing import Dict, List
 from src.models import Participant, Config
+from src.utils import display_name
 
 
 def get_email_template_no_limit(receiver_name: str, sender_name: str) -> str:
@@ -34,16 +35,18 @@ Bisous,
 """
 
 
-def send_email(giver: Participant, receiver: Participant, config: Config, credentials: Dict[str, str]) -> None:
+def send_email(giver: Participant, receiver: Participant, config: Config, credentials: Dict[str, str],
+               participants: List[Participant]) -> None:
     smtp_server = credentials['mail']['server']
     sender_email = credentials['mail']['email']
     password = credentials['mail']['password']
     port = 587
 
+    receiver_label = display_name(receiver, participants)
     if config.budget_limit:
-        mail_text = get_email_template_with_limit(receiver.name, config.sender_name, config.budget_limit)
+        mail_text = get_email_template_with_limit(receiver_label, config.sender_name, config.budget_limit)
     else:
-        mail_text = get_email_template_no_limit(receiver.name, config.sender_name)
+        mail_text = get_email_template_no_limit(receiver_label, config.sender_name)
 
     msg = MIMEMultipart()
     msg['From'] = sender_email

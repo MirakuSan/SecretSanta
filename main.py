@@ -34,7 +34,7 @@ def main():
         if confirm in ['oui', 'o', 'yes', 'y']:
             print("\n📤 Envoi des emails...")
             for giver, receiver in assignments:
-                send_email(giver, receiver, config, credentials)
+                send_email(giver, receiver, config, credentials, participants)
             print("\n✅ Tous les emails ont été envoyés !")
         else:
             print("\n❌ Envoi annulé.")

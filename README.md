@@ -21,16 +21,21 @@
 
 ✅ **Email validation** - Built-in validation and duplicate detection
 
+👯 **Duplicate names** - Two people can share a first name: you are warned and can tell them apart
+
 🔐 **SHA256 verification** - Manual verification with cryptographic hashes
 
 🎯 **Smart algorithm** - Constraint-based assignment with retry logic
 
 ## Installation
 
-Install dependencies:
+Requires Python 3.10+. Create a virtual environment and install dependencies:
 ```bash
-pip3 install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 ```
+
+Working in a [Paradev](#paradev-workspace) workspace? This is done for you.
 
 ## Usage
 
@@ -49,24 +54,26 @@ mail:
   password: "your-password"
 ```
 
+> **Gmail:** use an [app password](https://myaccount.google.com/apppasswords), not your account password. Google rejects regular passwords over SMTP; app passwords require 2-Step Verification to be enabled.
+
 ### 2. Run the interactive script
 
 ```bash
-python3 main.py
+.venv/bin/python main.py
 ```
 
 ### 3. Follow the prompts
 
 The script will guide you through:
 - **Participant count** - Minimum 3 participants
-- **Names and emails** - For each participant
+- **Names and emails** - For each participant. If a name is already taken, you are asked whether to tell them apart (e.g. `Marie D.` / `Marie L.`). If you keep both names, the mail adds the receiver's email so the giver knows who it is
 - **Budget limit** - Optional spending limit (€)
 - **Sender name** - Name to appear in emails
 - **Couple exclusions** - Optional pairs to exclude
 
 ### 4. Verify and send
 
-- Review SHA256 hashes for manual verification
+- Review SHA256 hashes for manual verification (each hash is computed from the participant's email, so everyone can find their own line)
 - Confirm to send emails to all participants
 
 ## Example Workflow
@@ -126,21 +133,29 @@ Numéro de la deuxième personne : 2
 ### Run tests
 
 ```bash
-python3 -m pytest
+.venv/bin/python -m pytest
 ```
 
 ### Run tests with coverage
 
 ```bash
-python3 -m pytest -v
+.venv/bin/python -m pytest --cov=src --cov-report=term-missing
 ```
 
-All tests (27) covering:
-- Email validation
-- Budget validation
-- Assignment algorithm with constraints
+Tests cover:
+- Email and budget validation
+- Assignment algorithm with constraints (self, couples, duplicate names)
+- Interactive participant input (duplicate-name prompt)
+- Email content
 - SHA256 hashing
 - Data models
+
+### Paradev workspace
+
+The repository ships a Paradev config in `.paradev/`:
+
+- **Setup** (`.paradev/setup.sh`, safe to re-run): creates `.venv` (rebuilt if its Python is older than 3.10 or pip is missing), installs `requirements.txt`, and copies `credentials.yml` from the main checkout when the workspace has none. It never overwrites an existing `credentials.yml`.
+- **Default terminal**: runs the test suite. `main.py` is never started automatically, as it is interactive and sends real emails.
 
 ## Authors
 
