@@ -1,6 +1,7 @@
 from typing import List, Tuple, Optional
 from src.models import Participant, Config
 from src.validation import validate_email, validate_budget
+from src.utils import display_name
 
 
 def get_participant_count() -> int:
@@ -81,7 +82,7 @@ def get_couple_exclusions(participants: List[Participant]) -> List[Tuple[str, st
         elif response in ['oui', 'o', 'yes', 'y']:
             print("\nParticipants disponibles :")
             for i, p in enumerate(participants):
-                print(f"{i+1}. {p.name}")
+                print(f"{i+1}. {display_name(p, participants)}")
 
             while True:
                 try:
@@ -100,11 +101,13 @@ def get_couple_exclusions(participants: List[Participant]) -> List[Tuple[str, st
                         print("❌ Une personne ne peut pas être en couple avec elle-même.")
                         continue
 
-                    name1 = participants[person1_idx - 1].name
-                    name2 = participants[person2_idx - 1].name
+                    person1 = participants[person1_idx - 1]
+                    person2 = participants[person2_idx - 1]
+                    name1 = display_name(person1, participants)
+                    name2 = display_name(person2, participants)
 
-                    pair = (name1, name2)
-                    reverse_pair = (name2, name1)
+                    pair = (person1.email, person2.email)
+                    reverse_pair = (person2.email, person1.email)
 
                     if pair in exclusions or reverse_pair in exclusions:
                         print(f"❌ Cette paire existe déjà.")

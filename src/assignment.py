@@ -26,13 +26,13 @@ def create_assignments(participants: List[Participant], config: Config, max_retr
         for i, giver in enumerate(givers):
             receiver = receivers[i]
 
-            if giver.name == receiver.name:
+            if giver.email == receiver.email:
                 valid = False
                 break
 
             for exclusion in config.couples_exclusions:
-                if (giver.name == exclusion[0] and receiver.name == exclusion[1]) or \
-                   (giver.name == exclusion[1] and receiver.name == exclusion[0]):
+                if (giver.email == exclusion[0] and receiver.email == exclusion[1]) or \
+                   (giver.email == exclusion[1] and receiver.email == exclusion[0]):
                     valid = False
                     break
 
