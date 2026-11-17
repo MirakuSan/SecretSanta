@@ -1,7 +1,7 @@
 from typing import List, Tuple, Optional
 from src.models import Participant, Config
 from src.validation import validate_email, validate_budget
-from src.utils import display_name
+from src.utils import display_name, normalize_name
 
 
 def get_participant_count() -> int:
@@ -13,6 +13,57 @@ def get_participant_count() -> int:
             print("❌ Il faut au moins 3 participants.")
         except ValueError:
             print("❌ Veuillez entrer un nombre valide.")
+
+
+YES_ANSWERS = ['oui', 'o', 'yes', 'y']
+NO_ANSWERS = ['non', 'n', 'no']
+
+
+def ask_yes_no(question: str) -> bool:
+    while True:
+        response = input(question).strip().lower()
+        if response in YES_ANSWERS:
+            return True
+        if response in NO_ANSWERS:
+            return False
+        print("❌ Répondez par 'oui' ou 'non'.")
+
+
+def find_homonym(name: str, participants: List[Participant]) -> Optional[Participant]:
+    return next((p for p in participants if normalize_name(p.name) == normalize_name(name)), None)
+
+
+def ask_new_name(participant: Participant, participants: List[Participant]) -> str:
+    others = [p for p in participants if p is not participant]
+    while True:
+        new_name = input(f"Nom affiché pour {participant.email} [{participant.name}] : ").strip() or participant.name
+        clash = find_homonym(new_name, others)
+        if clash is None or normalize_name(new_name) == normalize_name(participant.name):
+            return new_name
+        print(f"❌ « {new_name} » est déjà utilisé ({clash.email}).")
+
+
+def resolve_homonym(name: str, participants: List[Participant]) -> str:
+    """Avertit si le nom est déjà pris et propose de préciser qui est qui.
+
+    Renomme au besoin le participant déjà inscrit, et renvoie le nom de la nouvelle personne.
+    """
+    while True:
+        existing = find_homonym(name, participants)
+        if existing is None:
+            return name
+
+        print(f"⚠️  Le nom « {existing.name} » est déjà utilisé ({existing.email}).")
+        print(f"   Dans le mail, la personne qui lui offre ne verra que « {name} ».")
+        if not ask_yes_no("Préciser qui est qui ? (oui/non) : "):
+            return name
+
+        existing.name = ask_new_name(existing, participants)
+        name = input(f"Nom affiché pour la nouvelle personne [{name}] : ").strip() or name
+
+        # Les deux noms gardés identiques : choix assumé, le mail ajoutera l'email.
+        if normalize_name(name) == normalize_name(existing.name):
+            return name
 
 
 def get_participants() -> List[Participant]:
@@ -29,6 +80,7 @@ def get_participants() -> List[Participant]:
         while not name:
             print("❌ Le nom ne peut pas être vide.")
             name = input("Nom : ").strip()
+        name = resolve_homonym(name, participants)
 
         while True:
             email = input("Email : ").strip()
