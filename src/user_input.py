@@ -54,7 +54,7 @@ def resolve_homonym(name: str, participants: List[Participant]) -> str:
             return name
 
         print(f"⚠️  Le nom « {existing.name} » est déjà utilisé ({existing.email}).")
-        print(f"   Dans le mail, la personne qui lui offre ne verra que « {name} ».")
+        print(f"   Sans précision, les mails ajouteront l'email pour les distinguer, ex. « {existing.name} ({existing.email}) ».")
         if not ask_yes_no("Préciser qui est qui ? (oui/non) : "):
             return name
 

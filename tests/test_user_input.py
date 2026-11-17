@@ -93,3 +93,17 @@ class TestHomonymPrompt:
         assert [p.name for p in participants] == ["Bob", "Marie D.", "Marie L."]
         assert "❌ « Bob » est déjà utilisé (bob@test.com)." in capsys.readouterr().out
         assert queue == []
+
+    def test_warning_tells_what_the_mail_will_show(self, answers, capsys):
+        answers(
+            "3",
+            "Marie", "m1@test.com",
+            "marie", "non", "m2@test.com",
+            "Bob", "bob@test.com",
+        )
+
+        get_participants()
+
+        out = capsys.readouterr().out
+        assert "Sans précision, les mails ajouteront l'email pour les distinguer, ex. « Marie (m1@test.com) »." in out
+        assert "ne verra que" not in out
